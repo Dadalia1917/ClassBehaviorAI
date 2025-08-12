@@ -9,7 +9,7 @@ import com.example.Kcsj.entity.Orchard;
 import com.example.Kcsj.mapper.OrchardMapper;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 
 @RestController

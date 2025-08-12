@@ -4,207 +4,181 @@
 
 ## 系统架构
 
-系统采用前后端分离架构:
+本项目采用前后端分离架构，包含三个主要组件：
 
-- **前端**: Vue 3 + TypeScript + Vite + Element Plus
-- **后端**: SpringBoot + MyBatis-Plus
-- **AI服务**: Flask + YOLOv8/RT-DETR
-- **大模型**: Deepseek-R1、Qwen系列、Gemma3等
-- **数据库**: MySQL
-- **视频处理**: ffmpeg
+1. **前端(Vue)**：基于Vue3+TypeScript构建的用户界面，提供行为检测和分析结果展示功能。
+2. **后端(SpringBoot)**：负责用户管理、数据存储和请求转发的Java服务。
+3. **AI模型服务(Flask)**：运行深度学习模型和大语言模型的Python服务，提供行为检测和智能分析功能。
 
 ## 主要功能
 
-1. **图像行为检测**
-   - 支持上传图像进行课堂行为检测
-   - 使用YOLOv8或RT-DETR模型进行检测
-   - 提供检测结果可视化展示
-
-2. **视频行为检测**
-   - 支持上传视频文件进行行为分析
-   - 对视频帧进行处理并生成检测结果
-
-3. **摄像头实时检测**
-   - 支持摄像头实时画面检测
-   - 行为检测结果实时展示
-
-4. **大模型智能分析**
-   - 使用大语言模型对检测结果进行分析
-   - 生成教学建议和反馈
-   - 支持多种大模型选择（包括API和本地部署）
-
-5. **检测记录管理**
-   - 图像检测历史记录
-   - 视频检测历史记录
-   - 摄像头检测历史记录
-
-6. **用户管理**
-   - 教师用户管理
-   - 权限控制
+- 图像行为检测：支持上传图像进行课堂行为检测，使用YOLOv8或RT-DETR模型
+- 视频行为检测：支持上传视频文件进行行为分析
+- 摄像头实时检测：支持摄像头实时画面检测
+- 大模型智能分析：使用大语言模型对检测结果进行分析和教学建议生成
+- 检测记录管理：图像、视频、摄像头检测历史记录管理
+- 用户管理：教师用户管理和权限控制
 
 ## 技术栈
 
-### 前端
-- Vue 3
-- TypeScript
-- Vite
-- Element Plus
-- Vue Router
-- Pinia
-- Axios
+- **前端**：Vue 3、TypeScript、Element Plus
+- **后端**：SpringBoot 3.5.4 (最新版)、MyBatis-Plus、MySQL
+- **AI服务**：Flask、YOLOv8、RT-DETR、大型语言模型API
+- **Java版本**：JDK 24 (最新LTS版本)
+- **视频处理**：ffmpeg
+- **部署**：Docker (可选)
 
-### 后端
-- Java SpringBoot
-- MyBatis-Plus
-- RESTful API
+## 🚀 最新更新
 
-### AI服务
-- Python Flask
-- YOLOv8
-- RT-DETR
-- 大模型API/本地部署
+### 版本升级 (2025年8月)
+- **JDK升级**：从Java 1.8 升级到 JDK 24，带来以下改进：
+  - 更好的垃圾回收性能
+  - 增强的安全特性
+  - 改进的JVM性能和内存管理
+- **Spring Boot升级**：从2.3.7升级到3.5.4
+  - 支持更多现代化特性
+  - 更好的性能和稳定性
+  - 增强的安全性
+- **依赖库更新**：升级了所有核心依赖到最新稳定版本
+- **警告修复**：解决了JDK 24下的所有编译和运行时警告
+  - 添加了`--sun-misc-unsafe-memory-access=allow`参数解决FastJSON2的sun.misc.Unsafe警告
+  - 升级FastJSON2到2.0.58版本（最新稳定版）
+  - 配置了完整的JVM参数确保在JDK 24下正常运行
 
-### 数据库
-- MySQL
+## 快速开始
 
-## 项目结构
+### 前提条件
 
+- **JDK 24** (已升级到最新版本，包含性能优化和安全改进)
+- Node.js 16+
+- Python 3.8+
+- MySQL 8.0+
+- CUDA支持的GPU (推荐用于模型推理)
+- LM-Studio (用于本地部署大模型)
+
+### JDK 24 兼容性说明
+
+本项目已完全适配JDK 24，所有JVM警告均已解决：
+
+- ✅ **sun.misc.Unsafe警告** - 通过`--sun-misc-unsafe-memory-access=allow`参数解决
+- ✅ **模块系统** - 配置了必要的`--add-opens`参数
+- ✅ **动态代理** - 启用了`-XX:+EnableDynamicAgentLoading`
+- ✅ **参数名保留** - 编译器配置了`-parameters`标志
+
+如需手动运行，请使用以下JVM参数：
+```bash
+--enable-native-access=ALL-UNNAMED
+--add-opens java.base/java.lang=ALL-UNNAMED 
+--add-opens java.base/java.util=ALL-UNNAMED
+--add-opens java.base/sun.misc=ALL-UNNAMED
+--sun-misc-unsafe-memory-access=allow
+-XX:+EnableDynamicAgentLoading
 ```
-基于计算机图像检测与大模型反馈的课堂行为系统/
-  ├── database.sql             # 数据库脚本
-  ├── ffmpeg-7.1-full_build/   # 视频处理工具
-  ├── flask/                   # AI服务后端
-  │   ├── main(DETR).py        # RT-DETR模型服务
-  │   ├── main(YOLO).py        # YOLOv8模型服务
-  │   └── utils/               # 工具函数
-  │       ├── chatApi.py       # 大模型API接口
-  │       ├── predictImgD.py   # DETR图像预测
-  │       └── predictImgY.py   # YOLO图像预测
-  ├── springboot/              # Java后端
-  │   └── src/
-  │       └── main/
-  │           ├── java/        # Java代码
-  │           └── resources/   # 配置文件
-  └── vue/                     # 前端项目
-      └── src/
-          ├── api/             # API接口
-          ├── components/      # 组件
-          ├── views/           # 页面
-          └── utils/           # 工具函数
-```
-
-## 安装与运行
 
 ### 数据库配置
-1. 创建数据库
-   ```sql
-   CREATE DATABASE ai DEFAULT CHARACTER SET utf8mb4;
-   ```
-2. 导入数据结构
-   ```bash
-   mysql -u root -p ai < database.sql
-   ```
 
-### 后端服务
-1. 配置 SpringBoot
-   ```bash
-   cd springboot
-   # 配置 application.properties 中的数据库信息
-   ```
-2. 运行 SpringBoot 服务
-   ```bash
-   mvn spring-boot:run
-   ```
+1. 创建名为`ai`的数据库
+2. 运行`database.sql`脚本初始化数据库结构
 
-### AI服务
-1. 安装依赖
-   ```bash
-   cd flask
-   pip install -r requirements.txt
-   ```
-2. 下载模型权重文件到 weights 目录
-3. 运行服务
+### 后端服务启动
+
+1. 进入springboot目录
+2. 使用Maven构建项目：`mvn clean package`
+3. 运行生成的jar文件：`java -jar target/Kcsj-0.0.1-SNAPSHOT.jar`
+
+### AI服务启动
+
+1. 进入flask目录
+2. 安装依赖：`pip install -r requirements.txt`
+3. 启动Flask服务：
    ```bash
    python main\(YOLO\).py  # YOLOv8模型
    # 或
    python main\(DETR\).py  # RT-DETR模型
    ```
 
-### 前端服务
-1. 安装依赖
-   ```bash
-   cd vue
-   npm install
-   ```
-2. 运行开发服务
-   ```bash
-   npm run dev
-   ```
-3. 构建生产版本
-   ```bash
-   npm run build
-   ```
+### 前端启动
 
-## 大模型部署
+1. 进入vue目录
+2. 安装依赖：`npm install`
+3. 启动开发服务器：`npm run dev`
+4. 构建生产版本：`npm run build`
 
-本系统支持使用API和本地部署方式使用大模型进行分析。本地部署采用LM-Studio实现。
+## 大模型部署与使用
 
-### LM-Studio本地部署步骤
+本系统支持多种大模型部署方式，用于生成教学分析和建议：
 
-1. 下载并安装[LM-Studio](https://lmstudio.ai/)
-2. 从[Hugging Face](https://huggingface.co/)下载以下支持的模型之一：
-   - Deepseek-R1
-   - Qwen3.0
-   - Qwen2.5-VL
-   - Qwen2.5-Omni
-   - Gemma3
-3. 将模型加载到LM-Studio中
-4. 启动本地服务器（默认端口为1234）
-5. 在系统中选择相应的本地模型选项
+### 支持的模型
 
-### 支持的大模型列表
+- **云端API模型**
+  - Deepseek-R1
+  - Qwen
 
-系统支持以下大模型选项：
+- **局域网部署模型**
+  - Deepseek-R1-LAN
+  - Qwen3-LAN
+  - Qwen2.5-VL-LAN
+  - Qwen2.5-Omni-LAN
+  - Gemma3-LAN
 
-```
-- Deepseek-R1（API）
-- Qwen（API）
-- Deepseek-R1（局域网）
-- Qwen3.0（局域网）
-- Qwen2.5-VL（局域网）
-- Qwen2.5-Omni（局域网）
-- Gemma3（局域网）
-- Deepseek-R1（本地）
-- Qwen3.0（本地）
-- Qwen2.5-VL（本地）
-- Qwen2.5-Omni（本地）
-- Gemma3（本地）
-- 不使用大模型
-```
+- **本地部署模型**
+  - Deepseek-R1-Local
+  - Qwen3-Local
+  - Qwen2.5-VL-Local
+  - Qwen2.5-Omni-Local
+  - Gemma3-Local
 
-### 大模型参数说明
+### 使用LM-Studio进行本地部署
 
-在系统使用时，可以配置以下参数：
-- 输入图像/视频：要分析的图像或视频文件
-- 检测模型：选择YOLO或DETR模型
-- 置信度阈值：设置检测阈值
-- 大模型选择：从支持列表中选择合适的模型
-- 思考模式：开启后模型将进行更深入的分析（可能需要更长处理时间）
+1. 下载并安装 [LM-Studio](https://lmstudio.ai/)
+2. 从Hugging Face或其他来源下载所需模型（如Deepseek-R1、Qwen等）
+3. 在LM-Studio中加载模型
+4. 启动本地API服务器（通常在http://localhost:1234）
+5. 在系统设置中选择对应的"本地"模型选项
+
+### 思考模式
+
+系统支持开启思考模式（thinkMode），启用后大模型会提供更详细的分析过程和教学建议依据，适合教学和研究使用。
+
+## 系统访问
+
+- 前端页面：http://localhost:3000
+- Spring Boot 后端：http://localhost:9999
+- Flask AI 服务：http://localhost:5000
+
+### 默认登录账号
+
+- **管理员账号**：admin
+- **密码**：admin123
 
 ## 使用说明
 
-1. 访问系统: http://localhost:3000 (前端默认端口)
-2. 使用默认管理员账号登录: admin/123456
-3. 进入系统后可以使用图像检测、视频检测或摄像头实时检测功能
-4. 选择合适的大模型进行分析反馈
+1. 访问系统前端界面
+2. 使用默认管理员账号登录：admin/admin123
+3. 进入系统后可以使用：
+   - 图像检测：上传课堂图片进行行为检测
+   - 视频检测：上传课堂视频文件进行分析
+   - 摄像头实时检测：连接摄像头进行实时监控
+4. 选择合适的大模型进行智能分析和反馈
 
-## 系统截图
+## 模型信息
 
-(此处可添加系统主要界面截图)
+### 行为检测模型
 
-## 待优化功能
+本系统使用YOLOv8和RT-DETR模型对课堂行为进行检测和识别。预训练模型存储在`flask/weights/`目录下。
 
-1. 多摄像头支持
-2. 检测结果统计分析
-3. 检测精度优化
-4. 大模型反馈个性化定制 
+### 大语言模型
+
+支持多种大语言模型，既可以通过API密钥访问云端模型，也可以通过LM-Studio在本地部署运行。系统会根据选定的模型自动配置请求参数。
+
+## 许可证
+
+MIT
+
+## 贡献
+
+欢迎提交问题和贡献代码，请通过创建Issue或Pull Request参与项目开发。
+
+## 致谢
+
+感谢所有为本项目提供支持和贡献的人员。

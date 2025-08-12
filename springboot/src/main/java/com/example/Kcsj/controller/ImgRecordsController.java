@@ -8,7 +8,7 @@ import com.example.Kcsj.entity.ImgRecords;
 import com.example.Kcsj.mapper.ImgRecordsMapper;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @RestController
 @RequestMapping("/imgRecords")
